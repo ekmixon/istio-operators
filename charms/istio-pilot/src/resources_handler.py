@@ -87,6 +87,41 @@ class ResourceHandler:
                 ignore_unauthorized=ignore_unauthorized,
             )
 
+    def reconcile_desired_resources(
+        self, kind: Any, desired_resources: str, namespace: str = None
+    ) -> None:
+        """Reconciles the desired list of resources of any kind.
+
+        Args:
+            kind: resource kind (e.g. Service, Pod)
+            desired_resource: all desired resources in manifest form as str
+            namespace (optional): namespace of the object
+        """
+
+        existing_resources = self.lightkube_client.list(
+            res=kind,
+            labels={
+                "app.juju.is/created-by": f"{self.app_name}",
+                f"app.{self.app_name}.io/is-workload-entity": "true",
+            },
+            namespace=namespace,
+        )
+
+        if desired_resources:
+            desired_resources = codecs.load_all_yaml(desired_resources)
+            diff_obj = set(existing_resources) - set(desired_resources)
+            for obj in diff_obj:
+                self.delete_object(obj)
+            self._apply_manifest(desired_resources, namespace=namespace)
+        else:
+            self.delete_existing_resource_objects(
+                resource=kind,
+                labels={
+                    f"app.{self.app_name}.io/is-workload-entity": "true",
+                },
+                namespace=namespace,
+            )
+
     def create_ns_resource(
         self, filename: str, context: dict = None
     ) -> Type[GenericNamespacedResource]:
