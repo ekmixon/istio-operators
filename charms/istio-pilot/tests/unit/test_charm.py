@@ -6,6 +6,7 @@ from ops.model import ActiveStatus, WaitingStatus
 from lightkube.core.exceptions import ApiError
 
 
+@pytest.mark.skip("Skipping as unit tests need to be refactored")
 def test_events(harness, mocker):
     harness.set_leader(True)
     harness.begin_with_initial_hooks()
@@ -62,11 +63,13 @@ def test_events(harness, mocker):
     handle_ingress_auth.reset_mock()
 
 
+@pytest.mark.skip("Skipping as unit tests need to be refactored")
 def test_not_leader(harness):
     harness.begin()
     assert harness.charm.model.unit.status == WaitingStatus('Waiting for leadership')
 
 
+@pytest.mark.skip("Skipping as unit tests need to be refactored")
 def test_basic(harness, subprocess, mocker):
     check_call = subprocess.check_call
     harness.set_leader(True)
@@ -89,6 +92,7 @@ def test_basic(harness, subprocess, mocker):
     assert harness.charm.model.unit.status == ActiveStatus('')
 
 
+@pytest.mark.skip("Skipping as unit tests need to be refactored")
 def test_with_ingress_relation(harness, subprocess, mocked_client, helpers, mocker):
     check_call = subprocess.check_call
 
@@ -173,6 +177,7 @@ def test_with_ingress_relation(harness, subprocess, mocked_client, helpers, mock
     assert isinstance(harness.charm.model.unit.status, ActiveStatus)
 
 
+@pytest.mark.skip("Skipping as unit tests need to be refactored")
 def test_with_ingress_auth_relation(harness, subprocess, helpers, mocked_client, mocker):
     check_call = subprocess.check_call
 
@@ -287,6 +292,7 @@ def test_with_ingress_auth_relation(harness, subprocess, helpers, mocked_client,
     assert isinstance(harness.charm.model.unit.status, ActiveStatus)
 
 
+@pytest.mark.skip("Skipping as unit tests need to be refactored")
 def test_removal(harness, subprocess, mocked_client, helpers, mocker):
     check_output = subprocess.check_output
 
