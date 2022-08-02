@@ -220,11 +220,7 @@ class Operator(CharmBase):
 
     def handle_ingress_auth(self, event):
         auth_routes = self.interfaces['ingress-auth']
-        if auth_routes:
-            auth_routes = list(auth_routes.get_data().values())
-        else:
-            auth_routes = []
-
+        auth_routes = list(auth_routes.get_data().values()) if auth_routes else []
         if not auth_routes:
             self.log.info("Skipping auth route creation due to empty list")
             return

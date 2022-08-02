@@ -165,9 +165,7 @@ def test_with_ingress_relation(harness, subprocess, mocked_client, helpers, mock
 
     apply_calls = mocked_client.return_value.apply.call_args_list
     assert helpers.calls_contain_namespace(apply_calls, harness.model.name)
-    apply_args = []
-    for call in apply_calls:
-        apply_args.append(call[0][0])
+    apply_args = [call[0][0] for call in apply_calls]
     assert apply_args == apply_expected
 
     assert isinstance(harness.charm.model.unit.status, ActiveStatus)
@@ -279,9 +277,7 @@ def test_with_ingress_auth_relation(harness, subprocess, helpers, mocked_client,
 
     apply_calls = mocked_client.return_value.apply.call_args_list
     assert helpers.calls_contain_namespace(apply_calls, harness.model.name)
-    apply_args = []
-    for call in apply_calls:
-        apply_args.append(call[0][0])
+    apply_args = [call[0][0] for call in apply_calls]
     assert apply_args == expected
 
     assert isinstance(harness.charm.model.unit.status, ActiveStatus)
@@ -312,8 +308,9 @@ def test_removal(harness, subprocess, mocked_client, helpers, mocker):
         "-s",
         "profile=minimal",
         "-s",
-        f"values.global.istioNamespace={None}",
+        'values.global.istioNamespace=None',
     ]
+
 
     assert len(check_output.call_args_list) == 1
     assert check_output.call_args_list[0].args == (expected_args,)

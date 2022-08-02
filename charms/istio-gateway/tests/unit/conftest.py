@@ -12,8 +12,7 @@ def harness():
 # Autouse to prevent calling out to the k8s API via lightkube
 @pytest.fixture(autouse=True)
 def mocked_client(mocker):
-    client = mocker.patch("charm.Client")
-    yield client
+    yield mocker.patch("charm.Client")
 
 
 # This is used to parameterize tests for both egress and ingress

@@ -91,17 +91,16 @@ class Operator(CharmBase):
                 )
         except ApiError as err:
             self.log.exception("ApiError encountered while attempting to delete resource.")
-            if err.status.message is not None:
-                if "(Unauthorized)" in err.status.message:
-                    # Ignore error from https://bugs.launchpad.net/juju/+bug/1941655
-                    self.log.error(
-                        f"Ignoring unauthorized error during cleanup:" f"\n{err.status.message}"
-                    )
-                else:
-                    # But surface any other errors
-                    self.log.error(err.status.message)
-                    raise
+            if err.status.message is None:
+                raise
+            if "(Unauthorized)" in err.status.message:
+                # Ignore error from https://bugs.launchpad.net/juju/+bug/1941655
+                self.log.error(
+                    f"Ignoring unauthorized error during cleanup:" f"\n{err.status.message}"
+                )
             else:
+                # But surface any other errors
+                self.log.error(err.status.message)
                 raise
 
 

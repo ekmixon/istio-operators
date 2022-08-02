@@ -22,11 +22,7 @@ class Helpers:
 
     @staticmethod
     def calls_contain_namespace(calls, namespace):
-        for call in calls:
-            # Ensure the namespace is included in the call
-            if call.kwargs['namespace'] != namespace:
-                return False
-        return True
+        return all(call.kwargs['namespace'] == namespace for call in calls)
 
 
 @pytest.fixture(scope="session")
@@ -37,8 +33,7 @@ def helpers():
 # autouse to prevent calling out to the k8s API via lightkube
 @pytest.fixture(autouse=True)
 def mocked_client(mocker):
-    client = mocker.patch("charm.Client")
-    yield client
+    yield mocker.patch("charm.Client")
 
 
 # Mocking list is necessary since _delete_existing_resource_objects uses it to
